@@ -1,20 +1,37 @@
 import { Component, OnInit } from "@angular/core";
-import { FormGroup, FormControl, Validators } from "@angular/forms";
+import { FormBuilder, FormGroup, FormControl, Validators } from "@angular/forms";
+import {STEPPER_GLOBAL_OPTIONS} from '@angular/cdk/stepper';
 
 @Component({
   selector: "app-basic-form",
   templateUrl: "./basic-form.component.html",
-  styleUrls: ["./basic-form.component.css"]
+  styleUrls: ["./basic-form.component.css"],
+  providers: [{
+    provide: STEPPER_GLOBAL_OPTIONS, useValue: {showError: true}
+  }]
 })
 export class BasicFormComponent implements OnInit {
   formData = {};
   console = console;
-  basicForm: FormGroup;
+  //basicForm: FormGroup;
 
-  constructor() {}
+  firstFormGroup: FormGroup;
+  secondFormGroup: FormGroup;
+
+  constructor(private _formBuilder: FormBuilder) {}
 
   ngOnInit() {
-    this.basicForm = new FormGroup({
+    /*
+    this.firstFormGroup = this._formBuilder.group({
+      firstCtrl: ['', Validators.required]
+    });
+    */
+    this.secondFormGroup = this._formBuilder.group({
+      secondCtrl: ['', Validators.required]
+    });
+
+    this.firstFormGroup = new FormGroup({
+      //firstCtrl: new FormControl("", [Validators.required]),
       username: new FormControl("", [
         Validators.required,
         Validators.minLength(5),
