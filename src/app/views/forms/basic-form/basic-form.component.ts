@@ -2,36 +2,36 @@ import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, FormControl, Validators } from "@angular/forms";
 import {STEPPER_GLOBAL_OPTIONS} from '@angular/cdk/stepper';
 
+import { CityI, StateI } from '../../../shared/models/location.interface';
+import { DataService } from '../../../shared/services/data-location.service';
+
 @Component({
   selector: "app-basic-form",
   templateUrl: "./basic-form.component.html",
   styleUrls: ["./basic-form.component.css"],
   providers: [{
     provide: STEPPER_GLOBAL_OPTIONS, useValue: {showError: true}
-  }]
+  }, DataService]
 })
 export class BasicFormComponent implements OnInit {
-  formData = {};
-  console = console;
-  //basicForm: FormGroup;
+  //formData = {};
+  //console = console;
 
-  firstFormGroup: FormGroup;
-  secondFormGroup: FormGroup;
+  public firstFormGroup: FormGroup;
+  public secondFormGroup: FormGroup;
+  public thirdFormGroup: FormGroup;
 
-  constructor(private _formBuilder: FormBuilder) {}
+  public selectedState: StateI = {id: 0, name: ''};;
+  public states: StateI[];
+  public cities: CityI[];
+
+  constructor(private _formBuilder: FormBuilder, private dataSvc: DataService) {  }
 
   ngOnInit() {
-    /*
-    this.firstFormGroup = this._formBuilder.group({
-      firstCtrl: ['', Validators.required]
-    });
-    */
-    this.secondFormGroup = this._formBuilder.group({
-      secondCtrl: ['', Validators.required]
-    });
+
+    this.states = this.dataSvc.getStates();
 
     this.firstFormGroup = new FormGroup({
-      //firstCtrl: new FormControl("", [Validators.required]),
       username: new FormControl("", [
         Validators.required,
         Validators.minLength(5),
@@ -59,5 +59,17 @@ export class BasicFormComponent implements OnInit {
         return null;
       })
     });
+
+    this.secondFormGroup = this._formBuilder.group({
+      secondCtrl: ['', Validators.required]
+    });
+    
+    this.thirdFormGroup = this._formBuilder.group({
+      thirdCtrl: ['', Validators.required]
+    });
+  }
+
+  onSelect(id: number): void{
+        this.cities = this.dataSvc.getCities().filter(item => item.countryId == id);
   }
 }
